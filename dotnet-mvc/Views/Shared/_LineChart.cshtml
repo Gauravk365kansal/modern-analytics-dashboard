@@ -1,0 +1,43 @@
+@model List<TrendData>
+
+<div class="chart-card">
+    <h3 class="chart-title">Reports Published - Weekly Trend</h3>
+    <canvas id="lineChart" width="400" height="200"></canvas>
+</div>
+
+@section Scripts {
+    <script>
+        const lineCtx = document.getElementById('lineChart').getContext('2d');
+        const lineChart = new Chart(lineCtx, {
+            type: 'line',
+            data: {
+                labels: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.Select(x => x.Date))),
+                datasets: [{
+                    label: 'Reports Published',
+                    data: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.Select(x => x.Count))),
+                    borderColor: '#10b981',
+                    backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                    tension: 0.4,
+                    fill: true
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            stepSize: 5
+                        }
+                    }
+                }
+            }
+        });
+    </script>
+}

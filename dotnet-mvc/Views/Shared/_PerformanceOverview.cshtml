@@ -1,0 +1,84 @@
+@model DashboardViewModel
+
+<div class="performance-card">
+    <h3 class="performance-title">Performance Overview</h3>
+
+    <div class="performance-section">
+        <div class="performance-section-header">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"></path>
+                <circle cx="12" cy="12" r="3"></circle>
+            </svg>
+            <h4>Top 5 Reports by Views</h4>
+        </div>
+
+        <div class="reports-list">
+            @for (int i = 0; i < Model.TopReports.Take(5).Count(); i++)
+            {
+                var report = Model.TopReports[i];
+                <div class="report-item">
+                    <div class="report-item-content">
+                        <div class="report-rank">@(i + 1)</div>
+                        <div class="report-info">
+                            <p class="report-name">@report.Name</p>
+                            @if (!string.IsNullOrEmpty(report.Category))
+                            {
+                                <p class="report-category">@report.Category</p>
+                            }
+                        </div>
+                    </div>
+                    <div class="report-stats">
+                        <div class="stat-group">
+                            <div class="stat-value-views">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"></path>
+                                    <circle cx="12" cy="12" r="3"></circle>
+                                </svg>
+                                @report.Views
+                            </div>
+                            <div class="stat-label">views</div>
+                        </div>
+                        <div class="stat-group">
+                            <div class="stat-value-downloads">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                    <polyline points="7 10 12 15 17 10"></polyline>
+                                    <line x1="12" x2="12" y1="15" y2="3"></line>
+                                </svg>
+                                @report.Downloads
+                            </div>
+                            <div class="stat-label">downloads</div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+
+    <div class="performance-grid">
+        <div class="performance-stat performance-stat-red">
+            <div class="performance-stat-header">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"></path>
+                    <path d="M12 9v4"></path>
+                    <path d="M12 17h.01"></path>
+                </svg>
+                <h4>Zero Interaction</h4>
+            </div>
+            <p class="performance-stat-value">@Model.ReportsWithZeroViews</p>
+            <p class="performance-stat-label">Reports with no views</p>
+        </div>
+
+        <div class="performance-stat performance-stat-green">
+            <div class="performance-stat-header">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8"></path>
+                    <path d="M21 3v5h-5"></path>
+                </svg>
+                <h4>Recently Updated</h4>
+            </div>
+            <p class="performance-stat-value">@Model.ReportsRefreshed24h</p>
+            <p class="performance-stat-label">Refreshed in 24h</p>
+        </div>
+    </div>
+</div>

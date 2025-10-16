@@ -1,0 +1,31 @@
+@model List<CategoryDistribution>
+
+<div class="chart-card">
+    <h3 class="chart-title">Reports by Category</h3>
+    <canvas id="donutChart" width="400" height="300"></canvas>
+</div>
+
+@section Scripts {
+    <script>
+        const donutCtx = document.getElementById('donutChart').getContext('2d');
+        const donutChart = new Chart(donutCtx, {
+            type: 'doughnut',
+            data: {
+                labels: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.Select(x => x.Category))),
+                datasets: [{
+                    data: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.Select(x => x.Count))),
+                    backgroundColor: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.Select(x => x.Color)))
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom'
+                    }
+                }
+            }
+        });
+    </script>
+}

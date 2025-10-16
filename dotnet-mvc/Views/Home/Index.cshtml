@@ -1,0 +1,139 @@
+@model DashboardViewModel
+@{
+    ViewData["Title"] = "Analytics Dashboard";
+}
+
+<div class="dashboard-container">
+    <div class="dashboard-wrapper">
+        <header class="dashboard-header">
+            <div class="header-content">
+                <div class="header-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M3 3v18h18"></path>
+                        <path d="m19 9-5 5-4-4-3 3"></path>
+                    </svg>
+                </div>
+                <h1>Analytics Dashboard</h1>
+            </div>
+            <p class="header-subtitle">Real-time insights into your report performance and engagement metrics</p>
+        </header>
+
+        <div class="metrics-grid-3">
+            @await Html.PartialAsync("_MetricCard", new MetricCardViewModel
+            {
+                Title = "Total Reports Available",
+                Value = Model.ReportsAvailable,
+                Change = -5,
+                ChangeType = "decrease",
+                Period = "vs. last month",
+                IconType = "file"
+            })
+
+            @await Html.PartialAsync("_MetricCard", new MetricCardViewModel
+            {
+                Title = "Total Visits",
+                Value = Model.TotalVisits,
+                Change = 12,
+                ChangeType = "increase",
+                Period = "Last 30 days",
+                IconType = "eye"
+            })
+
+            @await Html.PartialAsync("_MetricCard", new MetricCardViewModel
+            {
+                Title = "Reports Refreshed",
+                Value = Model.ReportsRefreshed24h,
+                Change = 8,
+                ChangeType = "increase",
+                Period = "Last 24 hours",
+                IconType = "calendar"
+            })
+        </div>
+
+        <div class="metrics-grid-2">
+            @await Html.PartialAsync("_MetricCard", new MetricCardViewModel
+            {
+                Title = "Reports Published (7 Days)",
+                Value = Model.ReportsPublished7Days,
+                Change = -15,
+                ChangeType = "decrease",
+                Period = "vs. previous week",
+                Subtitle = "Weekly publication rate"
+            })
+
+            @await Html.PartialAsync("_MetricCard", new MetricCardViewModel
+            {
+                Title = "Reports Published (30 Days)",
+                Value = Model.ReportsPublished30Days,
+                Change = -58,
+                ChangeType = "decrease",
+                Period = "vs. previous month",
+                Subtitle = "Monthly publication trend"
+            })
+        </div>
+
+        <div class="metrics-grid-2">
+            <div class="highlight-card highlight-card-blue">
+                <div class="highlight-card-header">
+                    <div>
+                        <p class="highlight-card-title">Most Viewed Report</p>
+                        <p class="highlight-card-subtitle">All-time leader</p>
+                    </div>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"></path>
+                        <circle cx="12" cy="12" r="3"></circle>
+                    </svg>
+                </div>
+                <h3 class="highlight-card-name">@Model.MostViewedReport.Name</h3>
+                <div class="highlight-card-stats">
+                    <span class="stat-views">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"></path>
+                            <circle cx="12" cy="12" r="3"></circle>
+                        </svg>
+                        @Model.MostViewedReport.Views views
+                    </span>
+                    <span class="stat-category">@Model.MostViewedReport.Category</span>
+                </div>
+            </div>
+
+            <div class="highlight-card highlight-card-green">
+                <div class="highlight-card-header">
+                    <div>
+                        <p class="highlight-card-title">Most Downloaded Report</p>
+                        <p class="highlight-card-subtitle">Highest engagement</p>
+                    </div>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                        <polyline points="7 10 12 15 17 10"></polyline>
+                        <line x1="12" x2="12" y1="15" y2="3"></line>
+                    </svg>
+                </div>
+                <h3 class="highlight-card-name">@Model.MostDownloadedReport.Name</h3>
+                <div class="highlight-card-stats">
+                    <span class="stat-downloads">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                            <polyline points="7 10 12 15 17 10"></polyline>
+                            <line x1="12" x2="12" y1="15" y2="3"></line>
+                        </svg>
+                        @Model.MostDownloadedReport.Downloads downloads
+                    </span>
+                    <span class="stat-category">@Model.MostDownloadedReport.Category</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="metrics-grid-2">
+            @await Html.PartialAsync("_LineChart", Model.PublishedTrend)
+            @await Html.PartialAsync("_BarChart", Model)
+        </div>
+
+        <div class="metrics-grid-2">
+            @await Html.PartialAsync("_DonutChart", Model.CategoryDistribution)
+            @await Html.PartialAsync("_KeyInsights", Model.Insights)
+        </div>
+
+        @await Html.PartialAsync("_PerformanceOverview", Model)
+    </div>
+</div>
